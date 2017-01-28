@@ -11,12 +11,20 @@ export default class extends Phaser.State {
 
     preload () {
 
+        //
+        // Game assets
+        //
+        this.load.image('ship1', 'assets/images/ship1.png');
+        this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
+
     }
 
     create () {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.createBanner();
+        this.createLevel();
 
         let ship = new Ship({
             game:   this,
@@ -45,5 +53,20 @@ export default class extends Phaser.State {
         banner.fill = '#ffffff';
         banner.smoothed = false;
         banner.anchor.setTo(0.5);
+    }
+
+    createLevel() {
+        let map = game.add.tilemap('level1');
+        map.addTilesetImage('lunar_subterrain', 'lunar_subterrain');
+
+        //  Set the tiles for collision.
+        //  Do this BEFORE generating the p2 bodies below.
+        map.setCollisionBetween(0, 15);
+
+        let layer = map.createLayer('MapLayer');
+
+        this.physics.p2.convertTilemap(map, layer);
+
+        layer.resizeWorld();
     }
 }
