@@ -1,7 +1,7 @@
 {
   "name": "MoonLander",
   "version": "0.0.1",
-  "description": "",
+  "description": "A Phaser, ES2016, Webpack based game prototype.",
   "author": "Igal Alkon <igal.alkon@gmail.com>",
   "main": "src/main.js",
   "scripts": {
