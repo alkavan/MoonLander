@@ -10,10 +10,6 @@ export default class extends Phaser.State {
     }
 
     preload () {
-
-        //
-        // Game assets
-        //
         this.load.image('ship1', 'assets/images/ship1.png');
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
@@ -23,8 +19,8 @@ export default class extends Phaser.State {
     create () {
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.createBanner();
         this.createLevel();
+        this.createBanner();
 
         let ship = new Ship({
             game:   this,
