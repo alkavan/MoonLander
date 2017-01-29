@@ -2,18 +2,21 @@
 import Phaser from 'phaser'
 import Ship from '../sprites/Ship'
 
+const GRAVITY = 9.81;
+const GRAVITY_MULTIPLIER = 2;
+const GM = GRAVITY_MULTIPLIER * GRAVITY;
+
 export default class extends Phaser.State {
 
     init () {
         this.physics.startSystem(Phaser.Physics.P2JS);
-        this.physics.p2.gravity.y = 2 *9.81;
+        this.physics.p2.gravity.y = GM;
     }
 
     preload () {
         this.load.image('ship1', 'assets/images/ship1.png');
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
-
     }
 
     create () {

@@ -6,7 +6,7 @@ export default class extends Phaser.State {
 
     preload () {
         this.loaderBg  = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loaderBg');
-        this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loaderBar')
+        this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loaderBar');
 
         centerGameObjects([this.loaderBg, this.loaderBar]);
 

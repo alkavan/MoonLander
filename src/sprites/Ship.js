@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
-let _gameTime       = Symbol();
-let _physicsElapsed = Symbol();
+// Private properties
+let _speed = 0;
 
 export default class extends Phaser.Sprite {
 
@@ -16,37 +16,38 @@ export default class extends Phaser.Sprite {
         game.physics.p2.enable(this);
         this.body.mass = 1;
 
-        // Setup object symbols
-        this[_gameTime]       = game.time;
-        this[_physicsElapsed] = game.time.physicsElapsed;
-
-        // Entity properties
-        this['cursors'] = game.cursors;
-        this['speed']   = 2000;
+        _speed = 2000;
     }
 
+    get speed() { return _speed; }
+    set speed(speed) { _speed = speed; }
+
     applyCursorsThrust (thrust) {
-        if (this.cursors.left.isDown)
+        if (this.game.cursors.left.isDown)
         {
             this.body.thrustLeft(thrust);
         }
-        else if (this.cursors.right.isDown)
+        else if (this.game.cursors.right.isDown)
         {
             this.body.thrustRight(thrust);
         }
 
-        if (this.cursors.up.isDown)
+        if (this.game.cursors.up.isDown)
         {
             this.body.thrust(thrust);
         }
-        else if (this.cursors.down.isDown)
+        else if (this.game.cursors.down.isDown)
         {
             this.body.thrust(thrust*-1);
         }
     }
 
+    _getPhysicsElapsed() {
+        return this.game.time.physicsElapsed;
+    }
+
     getThrust() {
-        return this[_physicsElapsed] * this.speed;
+        return this._getPhysicsElapsed() * _speed;
     }
 
     update () {
