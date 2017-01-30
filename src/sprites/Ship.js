@@ -1,11 +1,12 @@
 import Phaser from 'phaser'
 
-// Private properties
-let _speed = 0;
-
+/**
+ * Ship Sprite Class
+ * @name Ship
+ */
 export default class extends Phaser.Sprite {
 
-    constructor ({ game, x, y, asset }) {
+    constructor ({ game, x, y, asset }, speed = 2000) {
 
         super(game, x, y, asset);
 
@@ -16,11 +17,11 @@ export default class extends Phaser.Sprite {
         game.physics.p2.enable(this);
         this.body.mass = 1;
 
-        _speed = 2000;
+        this._speed = speed;
     }
 
-    get speed() { return _speed; }
-    set speed(speed) { _speed = speed; }
+    get speed() { return this._speed; }
+    set speed(speed) { return this._speed = speed; }
 
     applyCursorsThrust (thrust) {
         if (this.game.cursors.left.isDown)
@@ -47,7 +48,7 @@ export default class extends Phaser.Sprite {
     }
 
     getThrust() {
-        return this._getPhysicsElapsed() * _speed;
+        return this._getPhysicsElapsed() * this.speed;
     }
 
     update () {

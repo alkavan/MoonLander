@@ -30,7 +30,7 @@ export default class extends Phaser.State {
             x:      this.world.centerX,
             y:      this.world.centerY,
             asset:  'ship1'
-        });
+        }, 2000);
 
         this.game.add.existing(ship);
         this.ship = ship;
