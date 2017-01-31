@@ -10,13 +10,15 @@ export default class extends Phaser.State {
 
     init () {
         this.physics.startSystem(Phaser.Physics.P2JS);
+        this.physics.p2.setImpactEvents(true);
         this.physics.p2.gravity.y = GM;
     }
 
     preload () {
-        this.load.image('ship1', 'assets/images/ship1.png');
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
+        this.load.spritesheet('landing_zone', 'assets/sprites/landing_zone.png', 48, 8);
+        this.load.image('ship1', 'assets/images/ship1.png');
     }
 
     create () {
@@ -32,7 +34,11 @@ export default class extends Phaser.State {
             asset:  'ship1'
         }, 2000);
 
-        this.game.add.existing(ship);
+        let playerCollisionGroup = this.physics.p2.createCollisionGroup();
+        // ship.body.setCollisionGroup(playerCollisionGroup);
+        this.add.existing(ship);
+
+        this.playerCollisionGroup = playerCollisionGroup;
         this.ship = ship;
     }
 
@@ -55,7 +61,7 @@ export default class extends Phaser.State {
     }
 
     createLevel() {
-        let map = game.add.tilemap('level1');
+        let map = this.add.tilemap('level1');
         map.addTilesetImage('lunar_subterrain', 'lunar_subterrain');
 
         //  Set the tiles for collision.
@@ -63,9 +69,23 @@ export default class extends Phaser.State {
         map.setCollisionBetween(0, 15);
 
         let layer = map.createLayer('MapLayer');
+        layer.resizeWorld();
 
         this.physics.p2.convertTilemap(map, layer);
 
-        layer.resizeWorld();
+        this.landingZones = this.add.group();
+        this.landingZones.enableBody = true;
+
+
+        this.physics.p2.updateBoundsCollisionGroup();
+
+        // This should work, but it's not, find out why.
+        map.enableDebug = true;
+        console.log(map);
+        let mission = this.physics.p2.convertCollisionObjects(map, 'Mission', true);
+        console.log(mission);
+
+        // this.landingZonesC = this.physics.p2.createCollisionGroup();
+        // map.createFromObjects('Mission', 1, 'landing_zone', 0, true, false, this.landingZones);
     }
 }
