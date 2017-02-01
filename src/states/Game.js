@@ -57,18 +57,23 @@ export default class extends Phaser.State {
         let layer = map.createLayer('MapLayer');
         layer.resizeWorld();
 
+        // Set physics on 'MapLayer' of tilemap
         this.physics.p2.convertTilemap(map, layer);
         this.physics.p2.updateBoundsCollisionGroup();
 
         // Landing zones
-        this.landingZones = this.add.group();
-        this.landingZones.enableBody = true;
-        this.landingZones.physicsBodyType = Phaser.Physics.P2JS;
+        let landingZones = this.add.group();
+        landingZones.enableBody = true;
+        landingZones.physicsBodyType = Phaser.Physics.P2JS;
 
         console.log(map);
 
-        map.createFromObjects('Mission', 'Landing Zone 1', 'landing_zone', 0, true, false, this.landingZones);
-        map.createFromObjects('Mission', 'Landing Zone 2', 'landing_zone', 0, true, false, this.landingZones);
+        map.createFromObjects('Mission', 'Landing Zone 1', 'landing_zone', 0, true, false, landingZones);
+        map.createFromObjects('Mission', 'Landing Zone 2', 'landing_zone', 0, true, false, landingZones);
+
+        landingZones.forEachExists((lz) => {
+            lz.body.static = true;
+        });
 
         // Ship
         let ship = new Ship({
@@ -78,11 +83,14 @@ export default class extends Phaser.State {
             asset:  'ship1'
         }, 2000);
 
+        // Ship contact events
+        ship.body.onBeginContact.add(function () {
+            console.log('CONTACT >', arguments);
+        }, this);
+
         this.add.existing(ship);
 
-        this.ship = ship;
-
-        // Contact events
-        ship.body.onBeginContact.add(function (a,b,c,d) {console.log('CONTACT >',arguments);}, this);
+        this.landingZones = landingZones;
+        this.ship         = ship;
     }
 }

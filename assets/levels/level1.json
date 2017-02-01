@@ -47,26 +47,28 @@
          "objects":[
                 {
                  "height":8,
-                 "id":55,
+                 "id":1,
                  "name":"Landing Zone 2",
                  "rotation":0,
                  "type":"landing_zone",
                  "visible":true,
                  "width":48,
-                 "x":880,
-                 "y":768
+                 "x":624,
+                 "y":780
                 }, 
                 {
                  "height":8,
-                 "id":56,
+                 "id":2,
                  "name":"Landing Zone 1",
                  "rotation":0,
                  "type":"landing_zone",
                  "visible":true,
                  "width":48,
-                 "x":1020.25,
-                 "y":732.75
+                 "x":1032,
+                 "y":748
                 }],
+         "offsetx":-24,
+         "offsety":-12,
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -74,7 +76,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":10,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":8,
