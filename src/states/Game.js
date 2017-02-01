@@ -26,8 +26,9 @@ export default class extends Phaser.State {
     preload () {
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
-        this.load.spritesheet('landing_zone', 'assets/sprites/landing_zone.png', 48, 8);
         this.load.image('ship1', 'assets/images/ship1.png');
+        this.load.spritesheet('landing_zone', 'assets/sprites/landing_zone.png', 48, 8);
+        this.load.spritesheet('fire1', 'assets/sprites/fire1.png', 24, 24);
     }
 
     /**
@@ -156,6 +157,8 @@ export default class extends Phaser.State {
             asset:  'ship1'
         }, 2000);
 
+        this.add.existing(ship);
+
         // Ship contact events
         ship.body.onBeginContact.add(function () {
             console.log('CONTACT >', arguments);
@@ -166,8 +169,6 @@ export default class extends Phaser.State {
                 this.addScore(100);
             }
         }, this);
-
-        this.add.existing(ship);
 
         this.landingZones = landingZones;
         this.ship         = ship;
