@@ -18,6 +18,7 @@ export default class extends Phaser.State {
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.physics.p2.setImpactEvents(true);
         this.physics.p2.gravity.y = GM;
+        this.physics.p2.restitution = 0.12;
     }
 
     /**
