@@ -78,6 +78,28 @@
                  "width":48,
                  "x":1032,
                  "y":748
+                }, 
+                {
+                 "height":16,
+                 "id":5,
+                 "name":"Main Cargo",
+                 "rotation":0,
+                 "type":"cago",
+                 "visible":true,
+                 "width":16,
+                 "x":1035,
+                 "y":717
+                }, 
+                {
+                 "height":16,
+                 "id":6,
+                 "name":"Extra Cargo",
+                 "rotation":0,
+                 "type":"cago",
+                 "visible":true,
+                 "width":16,
+                 "x":627.75,
+                 "y":745.25
                 }],
          "offsetx":-24,
          "offsety":-12,
@@ -88,7 +110,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":5,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":8,

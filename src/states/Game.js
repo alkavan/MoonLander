@@ -28,6 +28,7 @@ export default class extends Phaser.State {
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
         this.load.image('ship1', 'assets/images/ship1.png');
+        this.load.image('cargo1', 'assets/images/cargo1.png');
         this.load.spritesheet('landing_zone', 'assets/sprites/landing_zone.png', 48, 8);
         this.load.spritesheet('fire1', 'assets/sprites/fire1.png', 24, 24);
     }
@@ -140,14 +141,23 @@ export default class extends Phaser.State {
         landingZones.enableBody = true;
         landingZones.physicsBodyType = Phaser.Physics.P2JS;
 
+        let cargoGroup = this.add.group();
+        cargoGroup.enableBody = true;
+        cargoGroup.physicsBodyType = Phaser.Physics.P2JS;
         // DEBUG
         // console.log(map);
 
         map.createFromObjects('Mission', 'Landing Zone 1', 'landing_zone', 0, true, false, landingZones);
         map.createFromObjects('Mission', 'Landing Zone 2', 'landing_zone', 0, true, false, landingZones);
+        map.createFromObjects('Mission', 'Main Cargo', 'cargo1', 0, true, false, cargoGroup);
+        map.createFromObjects('Mission', 'Extra Cargo', 'cargo1', 0, true, false, cargoGroup);
 
         landingZones.forEachExists((lz) => {
             lz.body.static = true;
+        });
+
+        cargoGroup.forEachExists((cargo) => {
+            cargo.body.mass = 3.0;
         });
 
         // Ship
@@ -156,7 +166,7 @@ export default class extends Phaser.State {
             x:      this.world.centerX,
             y:      this.world.centerY,
             asset:  'ship1'
-        }, 2000);
+        }, 8000);
 
         this.add.existing(ship);
 

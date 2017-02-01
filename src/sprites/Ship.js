@@ -15,7 +15,7 @@ export default class extends Phaser.Sprite {
 
         // Enable P2 physics
         game.physics.p2.enable(this);
-        this.body.mass = 1;
+        this.body.mass = 5.0;
 
         this._speed = speed;
 
