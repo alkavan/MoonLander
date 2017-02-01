@@ -6,14 +6,23 @@ const GRAVITY = 9.81;
 const GRAVITY_MULTIPLIER = 2;
 const GM = GRAVITY_MULTIPLIER * GRAVITY;
 
+/**
+ * Game State
+ * @name GameState
+ */
 export default class extends Phaser.State {
-
+    /**
+     * State init callback
+     */
     init () {
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.physics.p2.setImpactEvents(true);
         this.physics.p2.gravity.y = GM;
     }
 
+    /**
+     * State preload callback
+     */
     preload () {
         this.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('lunar_subterrain', 'assets/sprites/lunar_subterrain.png');
@@ -21,18 +30,30 @@ export default class extends Phaser.State {
         this.load.image('ship1', 'assets/images/ship1.png');
     }
 
+    /**
+     * State create callback
+     */
     create () {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.createLevel();
         this.createBanner();
+        this.createScore(32, 200);
     }
 
+    /**
+     * State render callback
+     */
     render () {
         if (__DEV__) {
             this.game.debug.spriteInfo(this.ship, 32, 32)
         }
+
+        this.scoreLabel.setText("Score: " + this.score);
     }
 
+    /**
+     * Create game top banner (title)
+     */
     createBanner() {
         const bannerText = 'Moon Lander (0.0.1-alpha)';
         let banner = this.add.text(this.world.centerX, 35, bannerText);
@@ -45,6 +66,55 @@ export default class extends Phaser.State {
         banner.anchor.setTo(0.5);
     }
 
+    /**
+     * Create "big" message in location
+     * @param messageText
+     * @param x
+     * @param y
+     */
+    createMessage(messageText, x, y) {
+        let message = this.add.text(x, y, messageText);
+
+        message.padding.set(3, 6);
+        message.fontSize = 24;
+        message.fill = '#ff4f4a';
+        message.smoothed = false;
+        message.anchor.setTo(0.5);
+        message.alpha = 0;
+
+        // Tween animation
+        this.add.tween(message).to(
+            { alpha: 1 },
+            600,
+            Phaser.Easing.Linear.None,
+            true,
+            0,
+            1,
+            true
+        );
+    }
+
+
+    createScore(x, y, initial = 0) {
+        this.score = initial;
+        let score = this.add.text(x, y, initial);
+
+        score.padding.set(3, 6);
+        score.fontSize = 24;
+        score.fill = '#75ff5d';
+        score.smoothed = false;
+        score.alpha = 0.75;
+
+        this.scoreLabel = score;
+    }
+
+    addScore(appendValue) {
+        this.score += appendValue
+    }
+
+    /**
+     * Create and setup level entities
+     */
     createLevel() {
         // Add map to world
         let map = this.add.tilemap('level1');
@@ -57,6 +127,8 @@ export default class extends Phaser.State {
         let layer = map.createLayer('MapLayer');
         layer.resizeWorld();
 
+        let decoLayer = map.createLayer('Deco');
+
         // Set physics on 'MapLayer' of tilemap
         this.physics.p2.convertTilemap(map, layer);
         this.physics.p2.updateBoundsCollisionGroup();
@@ -66,7 +138,8 @@ export default class extends Phaser.State {
         landingZones.enableBody = true;
         landingZones.physicsBodyType = Phaser.Physics.P2JS;
 
-        console.log(map);
+        // DEBUG
+        // console.log(map);
 
         map.createFromObjects('Mission', 'Landing Zone 1', 'landing_zone', 0, true, false, landingZones);
         map.createFromObjects('Mission', 'Landing Zone 2', 'landing_zone', 0, true, false, landingZones);
@@ -86,6 +159,12 @@ export default class extends Phaser.State {
         // Ship contact events
         ship.body.onBeginContact.add(function () {
             console.log('CONTACT >', arguments);
+            let parent = arguments[1].parent;
+
+            if(parent && parent.sprite !== null && parent.sprite.key === 'landing_zone') {
+                this.createMessage("Landed at " + parent.sprite.name + "! +100", this.world.centerX, 100);
+                this.addScore(100);
+            }
         }, this);
 
         this.add.existing(ship);
