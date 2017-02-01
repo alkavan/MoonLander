@@ -23,23 +23,8 @@ export default class extends Phaser.State {
 
     create () {
         this.cursors = this.input.keyboard.createCursorKeys();
-
         this.createLevel();
         this.createBanner();
-
-        let ship = new Ship({
-            game:   this,
-            x:      this.world.centerX,
-            y:      this.world.centerY,
-            asset:  'ship1'
-        }, 2000);
-
-        let playerCollisionGroup = this.physics.p2.createCollisionGroup();
-        // ship.body.setCollisionGroup(playerCollisionGroup);
-        this.add.existing(ship);
-
-        this.playerCollisionGroup = playerCollisionGroup;
-        this.ship = ship;
     }
 
     render () {
@@ -61,6 +46,7 @@ export default class extends Phaser.State {
     }
 
     createLevel() {
+        // Add map to world
         let map = this.add.tilemap('level1');
         map.addTilesetImage('lunar_subterrain', 'lunar_subterrain');
 
@@ -72,20 +58,31 @@ export default class extends Phaser.State {
         layer.resizeWorld();
 
         this.physics.p2.convertTilemap(map, layer);
-
-        this.landingZones = this.add.group();
-        this.landingZones.enableBody = true;
-
-
         this.physics.p2.updateBoundsCollisionGroup();
 
-        // This should work, but it's not, find out why.
-        map.enableDebug = true;
-        console.log(map);
-        let mission = this.physics.p2.convertCollisionObjects(map, 'Mission', true);
-        console.log(mission);
+        // Landing zones
+        this.landingZones = this.add.group();
+        this.landingZones.enableBody = true;
+        this.landingZones.physicsBodyType = Phaser.Physics.P2JS;
 
-        // this.landingZonesC = this.physics.p2.createCollisionGroup();
-        // map.createFromObjects('Mission', 1, 'landing_zone', 0, true, false, this.landingZones);
+        console.log(map);
+
+        map.createFromObjects('Mission', 'Landing Zone 1', 'landing_zone', 0, true, false, this.landingZones);
+        map.createFromObjects('Mission', 'Landing Zone 2', 'landing_zone', 0, true, false, this.landingZones);
+
+        // Ship
+        let ship = new Ship({
+            game:   this,
+            x:      this.world.centerX,
+            y:      this.world.centerY,
+            asset:  'ship1'
+        }, 2000);
+
+        this.add.existing(ship);
+
+        this.ship = ship;
+
+        // Contact events
+        ship.body.onBeginContact.add(function (a,b,c,d) {console.log('CONTACT >',arguments);}, this);
     }
 }
