@@ -41,6 +41,9 @@ export default class extends Phaser.State {
         this.createLevel();
         this.createBanner();
         this.createScore(32, 200);
+
+        let music = this.add.audio('music_track_01', 1, true);
+        music.play();
     }
 
     /**
